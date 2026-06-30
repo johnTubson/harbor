@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "deps": "bash scripts/deps.sh",
+    "deps:reset": "bash scripts/deps-reset.sh",
+    "deps:ci": "pnpm install --frozen-lockfile",
     "postinstall": "pnpm run build:packages && pnpm --filter @harbor/api db:generate",
     "predev": "pnpm run build:packages",
     "dev": "turbo dev",
