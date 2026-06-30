@@ -1,0 +1,25 @@
+{
+  "name": "@harbor/admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "echo 'lint admin'",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "echo 'e2e in Phase 7'"
+  },
+  "dependencies": {
+    "@harbor/shared": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}

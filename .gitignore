@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.next/
+out/
+apps/api/prisma/generated/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs & coverage
+*.log
+coverage/
+
+# OS & IDE
+.DS_Store
+.idea/
+.vscode/
+.cursor/
+
+# Tooling caches
+.turbo/
+.pnpm-store/
+
+# Test artifacts
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Docs
+/docs/
+/README.md
+AGENTS.md
+
+# Deploy artifacts
+.vercel/

@@ -1,0 +1,27 @@
+{
+  "name": "harbor",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "pnpm run build:packages && pnpm --filter @harbor/api db:generate",
+    "predev": "pnpm run build:packages",
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "build:packages": "pnpm --filter @harbor/shared build",
+    "lint": "turbo lint",
+    "typecheck": "pnpm run build:packages && tsc -b tsconfig.json && pnpm -r typecheck",
+    "test": "turbo test",
+    "db:migrate": "pnpm --filter @harbor/api db:migrate",
+    "db:seed": "pnpm --filter @harbor/api db:seed",
+    "db:generate": "pnpm --filter @harbor/api db:generate"
+  },
+  "devDependencies": {
+    "turbo": "catalog:",
+    "typescript": "catalog:"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9.15.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

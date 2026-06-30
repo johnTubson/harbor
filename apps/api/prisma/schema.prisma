@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  platform_admin
+  merchant_admin
+  merchant_staff
+}
+
+enum MerchantStatus {
+  pending
+  active
+  rejected
+  suspended
+}
+
+enum OrderStatus {
+  placed
+  paid
+  shipped
+  delivered
+  cancelled
+}
+
+enum SettlementStatus {
+  draft
+  finalized
+  paid
+}
+
+enum KycDocumentType {
+  business_license
+  government_id
+  tax_certificate
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  role         UserRole
+  merchantId   String?
+  merchant     Merchant? @relation(fields: [merchantId], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([merchantId])
+}
+
+model Merchant {
+  id           String         @id @default(uuid())
+  name         String
+  slug         String         @unique
+  status       MerchantStatus @default(pending)
+  rejectReason String?
+  users        User[]
+  kycDocuments KycDocument[]
+  products     Product[]
+  orders       Order[]
+  settlements  Settlement[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([status])
+}
+
+model KycDocument {
+  id         String          @id @default(uuid())
+  merchantId String
+  merchant   Merchant        @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  type       KycDocumentType
+  objectKey  String
+  fileName   String
+  uploadedAt DateTime        @default(now())
+
+  @@index([merchantId])
+}
+
+model Product {
+  id          String           @id @default(uuid())
+  merchantId  String
+  merchant    Merchant         @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  slug        String
+  variants    ProductVariant[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@unique([merchantId, slug])
+  @@index([merchantId])
+}
+
+model ProductVariant {
+  id         String  @id @default(uuid())
+  productId  String
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku        String
+  name       String
+  priceCents Int
+  stock      Int     @default(0)
+
+  @@unique([productId, sku])
+  @@index([productId])
+}
+
+model Order {
+  id         String      @id @default(uuid())
+  merchantId String
+  merchant   Merchant    @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  status     OrderStatus @default(placed)
+  totalCents Int
+  currency   String      @default("USD")
+  lines      OrderLine[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([merchantId])
+  @@index([merchantId, status])
+}
+
+model OrderLine {
+  id             String @id @default(uuid())
+  orderId        String
+  order          Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productTitle   String
+  variantName    String?
+  quantity       Int
+  unitPriceCents Int
+
+  @@index([orderId])
+}
+
+model Settlement {
+  id          String           @id @default(uuid())
+  merchantId  String
+  merchant    Merchant         @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  periodStart DateTime
+  periodEnd   DateTime
+  grossCents  Int
+  feeCents    Int
+  netCents    Int
+  status      SettlementStatus @default(draft)
+  createdAt   DateTime         @default(now())
+
+  @@index([merchantId])
+  @@index([merchantId, status])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?
+  actorEmail String?
+  action     String
+  entityType String
+  entityId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
