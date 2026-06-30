@@ -4,6 +4,7 @@
     "composite": false,
     "declaration": false,
     "incremental": false,
+    "rootDir": "./src",
     "outDir": "./dist",
     "module": "Node16",
     "moduleResolution": "Node16",

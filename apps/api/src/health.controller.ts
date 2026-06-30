@@ -1,18 +1,18 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get } from "@nestjs/common";
+import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
 
-@ApiTags('health')
-@Controller('health')
+@ApiTags("health")
+@Controller("health")
 export class HealthController {
   @Get()
-  @ApiOkResponse({ description: 'Health check' })
+  @ApiOkResponse({ description: "Health check" })
   check() {
     return {
-      status: 'ok',
+      status: "ok",
       timestamp: new Date().toISOString(),
       apps: {
-        admin: 'http://localhost:3001',
-        merchant: 'http://localhost:3002',
+        admin: "http://localhost:3011",
+        merchant: "http://localhost:3012",
       },
     };
   }

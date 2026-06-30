@@ -5,8 +5,9 @@ node_modules/
 dist/
 .next/
 out/
-apps/api/prisma/generated/
+apps/api/src/generated/
 *.tsbuildinfo
+apps/api/prisma/generated/
 
 # Environment
 .env

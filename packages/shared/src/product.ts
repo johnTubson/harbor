@@ -41,7 +41,20 @@ export const createProductSchema = z.object({
   variants: z.array(createProductVariantSchema).min(1),
 });
 
+export const updateProductSchema = z.object({
+  title: z.string().min(1).max(200).optional(),
+  description: z.string().max(5000).optional().nullable(),
+  slug: z
+    .string()
+    .min(1)
+    .max(200)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+    .optional(),
+  variants: z.array(createProductVariantSchema).min(1).optional(),
+});
+
 export type ProductVariant = z.infer<typeof productVariantSchema>;
 export type Product = z.infer<typeof productSchema>;
 export type ProductWithVariants = z.infer<typeof productWithVariantsSchema>;
 export type CreateProductInput = z.infer<typeof createProductSchema>;
+export type UpdateProductInput = z.infer<typeof updateProductSchema>;

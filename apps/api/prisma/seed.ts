@@ -1,11 +1,10 @@
-import { config } from "dotenv";
-import { resolve } from "node:path";
 import { hash } from "bcryptjs";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
-import { PrismaClient } from "./generated/prisma/client";
+import { loadEnvForCli } from "../src/config/env";
+import { PrismaClient } from "../src/generated/prisma/client";
 
-config({ path: resolve(__dirname, "../../../.env") });
+loadEnvForCli();
 
 const DEMO_PASSWORD = "demo1234";
 
@@ -135,7 +134,33 @@ async function main() {
       data: {
         name: "Valley Organics",
         slug: "valley-organics",
-        status: "pending",
+        status: "active",
+        users: {
+          create: {
+            email: "merchant2@harbor.demo",
+            passwordHash,
+            role: "merchant_admin",
+          },
+        },
+        products: {
+          create: [
+            {
+              title: "Heirloom Tomato Seeds",
+              description: "Non-GMO seed pack for home gardeners.",
+              slug: "heirloom-tomato-seeds",
+              variants: {
+                create: [
+                  {
+                    sku: "TOM-HEIR",
+                    name: "10-Pack",
+                    priceCents: 899,
+                    stock: 300,
+                  },
+                ],
+              },
+            },
+          ],
+        },
         kycDocuments: {
           create: [
             {
@@ -165,10 +190,78 @@ async function main() {
       },
     });
 
+    await prisma.order.create({
+      data: {
+        merchantId: demoMerchant.id,
+        status: "paid",
+        totalCents: 3798,
+        currency: "USD",
+        lines: {
+          create: [
+            {
+              productTitle: "Organic Cotton Tote",
+              variantName: "Natural",
+              quantity: 1,
+              unitPriceCents: 2499,
+            },
+            {
+              productTitle: "Wildflower Honey",
+              variantName: "8 oz Jar",
+              quantity: 1,
+              unitPriceCents: 1299,
+            },
+          ],
+        },
+      },
+    });
+
+    await prisma.order.create({
+      data: {
+        merchantId: demoMerchant.id,
+        status: "shipped",
+        totalCents: 4599,
+        currency: "USD",
+        lines: {
+          create: [
+            {
+              productTitle: "Ceramic Pour-Over Set",
+              variantName: "Standard",
+              quantity: 1,
+              unitPriceCents: 4599,
+            },
+          ],
+        },
+      },
+    });
+
+    await prisma.order.create({
+      data: {
+        merchantId: valleyOrganics.id,
+        status: "placed",
+        totalCents: 1798,
+        currency: "USD",
+        lines: {
+          create: [
+            {
+              productTitle: "Heirloom Tomato Seeds",
+              variantName: "10-Pack",
+              quantity: 2,
+              unitPriceCents: 899,
+            },
+          ],
+        },
+      },
+    });
+
     console.log("Harbor seed complete");
-    console.log("  Admin:    admin@harbor.demo / demo1234");
-    console.log("  Merchant: merchant@harbor.demo / demo1234");
-    console.log(`  Merchants: 1 active (${demoMerchant.name}), 2 pending`);
+    console.log("  Admin:     admin@harbor.demo / demo1234");
+    console.log(
+      "  Merchant:  merchant@harbor.demo / demo1234 (Harbor Demo Shop)"
+    );
+    console.log(
+      "  Merchant2: merchant2@harbor.demo / demo1234 (Valley Organics)"
+    );
+    console.log(`  Merchants: 2 active, 1 pending`);
   } finally {
     await prisma.$disconnect();
     await pool.end();

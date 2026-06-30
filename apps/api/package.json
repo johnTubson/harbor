@@ -8,7 +8,7 @@
     "start": "node dist/main.js",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "echo 'lint api'",
-    "test": "echo 'api tests in Phase 2'",
+    "test": "vitest run",
     "db:migrate": "prisma migrate dev && prisma generate",
     "db:seed": "tsx prisma/seed.ts",
     "db:generate": "prisma generate"
@@ -16,25 +16,38 @@
   "dependencies": {
     "@harbor/shared": "workspace:*",
     "@nestjs/common": "catalog:",
+    "@nestjs/config": "catalog:",
     "@nestjs/core": "catalog:",
+    "@nestjs/jwt": "catalog:",
+    "@nestjs/passport": "catalog:",
     "@nestjs/platform-express": "catalog:",
     "@nestjs/swagger": "catalog:",
     "@prisma/adapter-pg": "catalog:",
     "@prisma/client": "catalog:",
     "bcryptjs": "catalog:",
     "dotenv": "catalog:",
+    "passport": "catalog:",
+    "passport-jwt": "catalog:",
     "pg": "catalog:",
     "reflect-metadata": "catalog:",
-    "rxjs": "catalog:"
+    "rxjs": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@nestjs/cli": "catalog:",
     "@nestjs/schematics": "catalog:",
+    "@nestjs/testing": "catalog:",
     "@types/bcryptjs": "catalog:",
     "@types/node": "catalog:",
+    "@types/passport-jwt": "catalog:",
     "@types/pg": "catalog:",
+    "@types/supertest": "catalog:",
+    "@swc/core": "catalog:",
     "prisma": "catalog:",
+    "supertest": "catalog:",
     "tsx": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "unplugin-swc": "catalog:",
+    "vitest": "catalog:"
   }
 }
