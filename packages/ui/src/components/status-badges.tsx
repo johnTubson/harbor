@@ -1,4 +1,8 @@
-import type { MerchantStatus, OrderStatus } from "@harbor/shared";
+import type {
+  MerchantStatus,
+  OrderStatus,
+  SettlementStatus,
+} from "@harbor/shared";
 
 import { Badge } from "./ui/badge";
 
@@ -34,6 +38,27 @@ export function MerchantStatusBadge({ status }: { status: MerchantStatus }) {
 export function OrderStatusBadge({ status }: { status: OrderStatus }) {
   return (
     <Badge variant={orderVariants[status]} className="capitalize">
+      {status}
+    </Badge>
+  );
+}
+
+const settlementVariants: Record<
+  SettlementStatus,
+  "warning" | "info" | "success"
+> = {
+  draft: "warning",
+  finalized: "info",
+  paid: "success",
+};
+
+export function SettlementStatusBadge({
+  status,
+}: {
+  status: SettlementStatus;
+}) {
+  return (
+    <Badge variant={settlementVariants[status]} className="capitalize">
       {status}
     </Badge>
   );

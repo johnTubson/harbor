@@ -5,6 +5,7 @@ export { EmptyState } from "./components/empty-state";
 export {
   MerchantStatusBadge,
   OrderStatusBadge,
+  SettlementStatusBadge,
 } from "./components/status-badges";
 export { TableSkeleton, CardSkeleton } from "./components/loading";
 
