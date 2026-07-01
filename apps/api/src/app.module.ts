@@ -10,7 +10,9 @@ import { AuthModule } from "./modules/auth/auth.module";
 import { CatalogModule } from "./modules/catalog/catalog.module";
 import { MerchantsModule } from "./modules/merchants/merchants.module";
 import { OrdersModule } from "./modules/orders/orders.module";
+import { SearchModule } from "./modules/search/search.module";
 import { SettlementsModule } from "./modules/settlements/settlements.module";
+import { StorageModule } from "./modules/storage/storage.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { WorkersModule } from "./workers/workers.module";
 
@@ -30,6 +32,8 @@ import { WorkersModule } from "./workers/workers.module";
     CatalogModule,
     OrdersModule,
     SettlementsModule,
+    StorageModule,
+    SearchModule,
     WorkersModule,
   ],
   controllers: [AppController, HealthController],

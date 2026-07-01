@@ -84,15 +84,16 @@ model KycDocument {
 }
 
 model Product {
-  id          String           @id @default(uuid())
-  merchantId  String
-  merchant    Merchant         @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  title       String
-  description String?
-  slug        String
-  variants    ProductVariant[]
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  id            String           @id @default(uuid())
+  merchantId    String
+  merchant      Merchant         @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  title         String
+  description   String?
+  slug          String
+  searchVector  Unsupported("tsvector")?
+  variants      ProductVariant[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 
   @@unique([merchantId, slug])
   @@index([merchantId])

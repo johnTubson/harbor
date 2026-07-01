@@ -113,6 +113,13 @@ async function main() {
         name: "Pending Artisan Co",
         slug: "pending-artisan",
         status: "pending",
+        users: {
+          create: {
+            email: "pending@harbor.demo",
+            passwordHash,
+            role: "merchant_admin",
+          },
+        },
         kycDocuments: {
           create: [
             {
@@ -253,6 +260,14 @@ async function main() {
       },
     });
 
+    await prisma.$executeRaw`
+      UPDATE "Product"
+      SET "searchVector" = to_tsvector(
+        'english',
+        coalesce("title", '') || ' ' || coalesce("description", '')
+      )
+    `;
+
     console.log("Harbor seed complete");
     console.log("  Admin:     admin@harbor.demo / demo1234");
     console.log(
@@ -260,6 +275,9 @@ async function main() {
     );
     console.log(
       "  Merchant2: merchant2@harbor.demo / demo1234 (Valley Organics)"
+    );
+    console.log(
+      "  Pending:   pending@harbor.demo / demo1234 (Pending Artisan Co)"
     );
     console.log(`  Merchants: 2 active, 1 pending`);
   } finally {

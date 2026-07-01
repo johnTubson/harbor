@@ -23,6 +23,8 @@ async function bootstrap() {
     .addTag("auth")
     .addTag("merchants")
     .addTag("catalog")
+    .addTag("search")
+    .addTag("storage")
     .addTag("orders")
     .build();
 

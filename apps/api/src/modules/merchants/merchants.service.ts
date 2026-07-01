@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -7,16 +8,19 @@ import type {
   CreateMerchantInput,
   JwtPayload,
   MerchantRejectInput,
+  RegisterKycDocumentInput,
   UpdateMerchantInput,
 } from "@harbor/shared";
 import { PrismaService } from "../../prisma/prisma.service";
+import { StorageService } from "../storage/storage.service";
 import { AuditService } from "../audit/audit.service";
 
 @Injectable()
 export class MerchantsService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly audit: AuditService
+    private readonly audit: AuditService,
+    private readonly storage: StorageService
   ) {}
 
   findAll(status?: string) {
@@ -100,5 +104,37 @@ export class MerchantsService {
       },
     });
     return updated;
+  }
+
+  async registerKycDocument(
+    merchantId: string,
+    input: RegisterKycDocumentInput
+  ) {
+    const merchant = await this.findById(merchantId);
+    if (merchant.status === "active") {
+      throw new BadRequestException(
+        "KYC documents cannot be added after merchant activation"
+      );
+    }
+
+    this.storage.assertKycObjectKeyForMerchant(input.objectKey, merchantId);
+
+    const existing = await this.prisma.kycDocument.findFirst({
+      where: { merchantId, type: input.type },
+    });
+    if (existing) {
+      throw new ConflictException(
+        `A ${input.type.replace(/_/g, " ")} document is already registered`
+      );
+    }
+
+    return this.prisma.kycDocument.create({
+      data: {
+        merchantId,
+        type: input.type,
+        objectKey: input.objectKey,
+        fileName: input.fileName,
+      },
+    });
   }
 }

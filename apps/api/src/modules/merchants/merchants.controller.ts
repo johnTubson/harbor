@@ -18,6 +18,7 @@ import {
 import {
   createMerchantSchema,
   merchantRejectSchema,
+  registerKycDocumentSchema,
   type JwtPayload,
   updateMerchantSchema,
 } from "@harbor/shared";
@@ -25,6 +26,7 @@ import { CurrentMerchant } from "../../common/decorators/current-merchant.decora
 import { CurrentUser } from "../../common/decorators/current-user.decorator";
 import { Roles } from "../../common/decorators/roles.decorator";
 import { RolesGuard } from "../../common/guards/roles.guard";
+import { TenantGuard } from "../../common/guards/tenant.guard";
 import { ZodValidationPipe } from "../../common/pipes/zod-validation.pipe";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { MerchantsService } from "./merchants.service";
@@ -46,9 +48,26 @@ export class MerchantsController {
 
   @Get("me")
   @Roles("merchant_admin", "merchant_staff")
+  @UseGuards(TenantGuard)
   @ApiOperation({ summary: "Get current merchant profile" })
   findMe(@CurrentMerchant() merchantId: string) {
     return this.merchantsService.findSelf(merchantId);
+  }
+
+  @Post("me/kyc-documents")
+  @Roles("merchant_admin")
+  @UseGuards(TenantGuard)
+  @ApiOperation({
+    summary: "Register uploaded KYC document for current merchant",
+  })
+  registerKycDocument(
+    @CurrentMerchant() merchantId: string,
+    @Body(new ZodValidationPipe(registerKycDocumentSchema)) body: unknown
+  ) {
+    return this.merchantsService.registerKycDocument(
+      merchantId,
+      body as Parameters<MerchantsService["registerKycDocument"]>[1]
+    );
   }
 
   @Get(":id")

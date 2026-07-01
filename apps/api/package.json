@@ -26,6 +26,8 @@
     "@prisma/client": "catalog:",
     "bcryptjs": "catalog:",
     "bullmq": "catalog:",
+    "@aws-sdk/client-s3": "catalog:",
+    "@aws-sdk/s3-request-presigner": "catalog:",
     "decimal.js": "catalog:",
     "dotenv": "catalog:",
     "passport": "catalog:",

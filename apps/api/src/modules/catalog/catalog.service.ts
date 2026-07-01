@@ -10,10 +10,14 @@ import type {
   UpdateProductInput,
 } from "@harbor/shared";
 import { PrismaService } from "../../prisma/prisma.service";
+import { IndexQueueService } from "../../workers/index-queue.service";
 
 @Injectable()
 export class CatalogService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly indexQueue: IndexQueueService
+  ) {}
 
   findAll(user: JwtPayload) {
     if (user.role === "platform_admin") {
@@ -58,9 +62,11 @@ export class CatalogService {
       where: { merchantId_slug: { merchantId, slug: input.slug } },
     });
     if (existing) {
-      throw new ConflictException("Product slug already exists for this merchant");
+      throw new ConflictException(
+        "Product slug already exists for this merchant"
+      );
     }
-    return this.prisma.product.create({
+    const product = await this.prisma.product.create({
       data: {
         merchantId,
         title: input.title,
@@ -70,6 +76,8 @@ export class CatalogService {
       },
       include: { variants: true },
     });
+    await this.indexQueue.enqueueProductIndex(product.id);
+    return product;
   }
 
   async update(id: string, merchantId: string, input: UpdateProductInput) {
@@ -88,10 +96,12 @@ export class CatalogService {
         where: { merchantId_slug: { merchantId, slug: input.slug } },
       });
       if (slugTaken) {
-        throw new ConflictException("Product slug already exists for this merchant");
+        throw new ConflictException(
+          "Product slug already exists for this merchant"
+        );
       }
     }
-    return this.prisma.$transaction(async (tx) => {
+    const updated = await this.prisma.$transaction(async (tx) => {
       if (input.variants) {
         await tx.productVariant.deleteMany({ where: { productId: id } });
       }
@@ -103,12 +113,12 @@ export class CatalogService {
             ? { description: input.description }
             : {}),
           ...(input.slug !== undefined ? { slug: input.slug } : {}),
-          ...(input.variants
-            ? { variants: { create: input.variants } }
-            : {}),
+          ...(input.variants ? { variants: { create: input.variants } } : {}),
         },
         include: { variants: true },
       });
     });
+    await this.indexQueue.enqueueProductIndex(updated.id);
+    return updated;
   }
 }
