@@ -43,6 +43,7 @@ export function clearSession() {
 const sessionListeners = new Set<() => void>();
 
 function emitSessionChange() {
+  cachedSnapshot = null;
   sessionListeners.forEach((listener) => listener());
 }
 
@@ -53,8 +54,27 @@ export type SessionSnapshot = {
 
 const emptySession: SessionSnapshot = { token: null, user: null };
 
+let cachedSnapshot: SessionSnapshot | null = null;
+let cachedToken: string | null | undefined;
+let cachedUserRaw: string | null | undefined;
+
 export function getSessionSnapshot(): SessionSnapshot {
-  return { token: getToken(), user: getStoredUser() };
+  const token = getToken();
+  const userRaw =
+    typeof window === "undefined" ? null : localStorage.getItem(USER_KEY);
+
+  if (
+    cachedSnapshot !== null &&
+    cachedToken === token &&
+    cachedUserRaw === userRaw
+  ) {
+    return cachedSnapshot;
+  }
+
+  cachedToken = token;
+  cachedUserRaw = userRaw;
+  cachedSnapshot = { token, user: getStoredUser() };
+  return cachedSnapshot;
 }
 
 export function getServerSessionSnapshot(): SessionSnapshot {

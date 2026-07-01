@@ -1,11 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
 import type {
   CreateProductInput,
   OrderWithLines,
   ProductWithVariants,
+  Settlement,
+  SettlementPreviewResponse,
   UpdateProductInput,
 } from "@harbor/shared";
 import { apiFetch } from "./api";
+import { defaultSettlementPeriod, settlementPeriodQuery } from "./settlements";
 
 export function useProducts() {
   return useQuery({
@@ -63,5 +67,30 @@ export function useOrder(id: string) {
     queryKey: ["orders", id],
     queryFn: () => apiFetch<OrderWithLines>(`/orders/${id}`),
     enabled: Boolean(id),
+  });
+}
+
+export function useSettlements() {
+  return useQuery({
+    queryKey: ["settlements"],
+    queryFn: () => apiFetch<Settlement[]>("/settlements"),
+  });
+}
+
+export function useSettlementPreview(period?: {
+  periodStart: string;
+  periodEnd: string;
+}) {
+  const defaultPeriod = useMemo(() => defaultSettlementPeriod(), []);
+  const { periodStart, periodEnd } = period ?? defaultPeriod;
+  return useQuery({
+    queryKey: ["settlements", "preview", periodStart, periodEnd],
+    queryFn: () =>
+      apiFetch<SettlementPreviewResponse>(
+        `/settlements/preview?${settlementPeriodQuery({
+          periodStart,
+          periodEnd,
+        })}`
+      ),
   });
 }

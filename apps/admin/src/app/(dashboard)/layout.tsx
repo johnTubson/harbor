@@ -1,13 +1,14 @@
 "use client";
 
 import { AppLoading, AppShell, type NavItem } from "@harbor/ui";
-import { Building2, ClipboardList, LayoutDashboard } from "lucide-react";
+import { Banknote, Building2, ClipboardList, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { useRequireAuth } from "@/lib/auth";
 
 const navItems: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/merchants", label: "Merchants", icon: Building2 },
+  { href: "/settlements", label: "Settlements", icon: Banknote },
   { href: "/audit", label: "Audit Log", icon: ClipboardList },
 ];
 

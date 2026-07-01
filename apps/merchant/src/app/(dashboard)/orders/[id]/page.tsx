@@ -76,10 +76,7 @@ export default function OrderDetailPage() {
                   <p className="text-muted-foreground">Qty {line.quantity}</p>
                 </div>
                 <p className="font-medium">
-                  {formatCents(
-                    line.unitPriceCents * line.quantity,
-                    order.currency
-                  )}
+                  {formatCents(line.lineTotalCents, order.currency)}
                 </p>
               </li>
             ))}
