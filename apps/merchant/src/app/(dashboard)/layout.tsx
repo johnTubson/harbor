@@ -1,7 +1,13 @@
 "use client";
 
 import { AppLoading, AppShell, type NavItem } from "@harbor/ui";
-import { LayoutDashboard, Package, ShoppingCart, Wallet } from "lucide-react";
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  ShieldCheck,
+  Wallet,
+} from "lucide-react";
 import { useState } from "react";
 import { useRequireAuth } from "@/lib/auth";
 
@@ -10,6 +16,7 @@ const navItems: NavItem[] = [
   { href: "/products", label: "Products", icon: Package },
   { href: "/orders", label: "Orders", icon: ShoppingCart },
   { href: "/payouts", label: "Payouts", icon: Wallet },
+  { href: "/kyc", label: "KYC", icon: ShieldCheck },
 ];
 
 export default function DashboardLayout({

@@ -2,14 +2,52 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import type {
   CreateProductInput,
+  KycUploadUrlResponse,
+  MerchantWithKyc,
   OrderWithLines,
   ProductWithVariants,
+  RegisterKycDocumentInput,
   Settlement,
   SettlementPreviewResponse,
   UpdateProductInput,
 } from "@harbor/shared";
 import { apiFetch } from "./api";
 import { defaultSettlementPeriod, settlementPeriodQuery } from "./settlements";
+
+export function useMerchantProfile() {
+  return useQuery({
+    queryKey: ["merchant", "me"],
+    queryFn: () => apiFetch<MerchantWithKyc>("/merchants/me"),
+  });
+}
+
+export function useKycUploadUrl() {
+  return useMutation({
+    mutationFn: (input: {
+      type: RegisterKycDocumentInput["type"];
+      fileName: string;
+      contentType: string;
+    }) =>
+      apiFetch<KycUploadUrlResponse>("/storage/kyc/upload-url", {
+        method: "POST",
+        body: JSON.stringify(input),
+      }),
+  });
+}
+
+export function useRegisterKycDocument() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: RegisterKycDocumentInput) =>
+      apiFetch("/merchants/me/kyc-documents", {
+        method: "POST",
+        body: JSON.stringify(input),
+      }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["merchant", "me"] });
+    },
+  });
+}
 
 export function useProducts() {
   return useQuery({

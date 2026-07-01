@@ -5,6 +5,7 @@ import type {
   MerchantRejectInput,
   MerchantWithKyc,
   PaginatedAuditLogs,
+  ProductSearchResponse,
   Settlement,
   SettlementBatchInput,
   SettlementPreviewResponse,
@@ -105,5 +106,22 @@ export function useCreateSettlementBatch() {
       void qc.invalidateQueries({ queryKey: ["settlements"] });
       void qc.invalidateQueries({ queryKey: ["audit"] });
     },
+  });
+}
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+
+export function useProductSearch(query: string) {
+  return useQuery({
+    queryKey: ["product-search", query],
+    queryFn: async () => {
+      const params = new URLSearchParams({ q: query });
+      const res = await fetch(`${API_URL}/products/search?${params}`);
+      if (!res.ok) {
+        throw new Error("Search failed");
+      }
+      return res.json() as Promise<ProductSearchResponse>;
+    },
+    enabled: query.trim().length >= 2,
   });
 }
