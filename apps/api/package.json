@@ -25,6 +25,8 @@
     "@prisma/adapter-pg": "catalog:",
     "@prisma/client": "catalog:",
     "bcryptjs": "catalog:",
+    "bullmq": "catalog:",
+    "decimal.js": "catalog:",
     "dotenv": "catalog:",
     "passport": "catalog:",
     "passport-jwt": "catalog:",

@@ -40,6 +40,8 @@ catalog:
   dotenv: ^17.2.3
   reflect-metadata: ^0.2.2
   rxjs: ^7.8.2
+  bullmq: ^5.56.5
+  decimal.js: ^10.6.0
   turbo: ^2.10.1
   "@tanstack/react-query": ^5.90.12
   tailwindcss: ^4.1.18

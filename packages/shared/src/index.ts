@@ -3,6 +3,7 @@ export * from "./auth";
 export * from "./enums";
 export * from "./merchant";
 export * from "./order";
+export * from "./order-state-machine";
 export * from "./product";
 export * from "./settlement";
 
