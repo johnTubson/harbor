@@ -16,9 +16,14 @@
     "test": "turbo test",
     "db:migrate": "pnpm --filter @harbor/api db:migrate",
     "db:seed": "pnpm --filter @harbor/api db:seed",
-    "db:generate": "pnpm --filter @harbor/api db:generate"
+    "db:generate": "pnpm --filter @harbor/api db:generate",
+    "test:e2e": "playwright test --config e2e/playwright.config.js",
+    "docs:architecture": "mmdc -i docs/assets/architecture.mmd -o docs/assets/architecture.png -b transparent"
   },
   "devDependencies": {
+    "dotenv": "catalog:",
+    "@mermaid-js/mermaid-cli": "^11.12.0",
+    "@playwright/test": "^1.57.0",
     "turbo": "catalog:",
     "typescript": "catalog:"
   },

@@ -7,11 +7,42 @@ on:
     branches: [main]
 
 env:
-  DATABASE_URL: postgresql://harbor:harbor@localhost:5432/harbor
+  DATABASE_URL: postgresql://harbor:harbor@localhost:5434/harbor
+  REDIS_URL: redis://localhost:6381
+  JWT_SECRET: ci-test-secret
+  MINIO_ENDPOINT: localhost
+  MINIO_PORT: 9000
+  MINIO_ACCESS_KEY: harbor
+  MINIO_SECRET_KEY: harborsecret
+  MINIO_BUCKET: kyc-documents
+  NEXT_PUBLIC_API_URL: http://localhost:4000
 
 jobs:
   quality:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: harbor
+          POSTGRES_PASSWORD: harbor
+          POSTGRES_DB: harbor
+        ports:
+          - 5434:5432
+        options: >-
+          --health-cmd "pg_isready -U harbor"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6381:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -22,8 +53,67 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm deps:ci
-      - run: pnpm db:generate
+      - run: pnpm db:migrate
+      - run: pnpm db:seed
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm test
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: quality
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: harbor
+          POSTGRES_PASSWORD: harbor
+          POSTGRES_DB: harbor
+        ports:
+          - 5434:5432
+        options: >-
+          --health-cmd "pg_isready -U harbor"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6381:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Start MinIO
+        run: |
+          docker run -d --name minio \
+            -p 9000:9000 \
+            -e MINIO_ROOT_USER=harbor \
+            -e MINIO_ROOT_PASSWORD=harborsecret \
+            minio/minio server /data
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:9000/minio/health/live && break
+            sleep 2
+          done
+      - run: pnpm deps:ci
+      - run: pnpm db:migrate
+      - run: pnpm build
+      - run: pnpm exec playwright install chromium --with-deps
+      - run: pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

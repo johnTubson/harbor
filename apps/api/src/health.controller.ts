@@ -11,8 +11,8 @@ export class HealthController {
       status: "ok",
       timestamp: new Date().toISOString(),
       apps: {
-        admin: "http://localhost:3011",
-        merchant: "http://localhost:3012",
+        admin: `http://localhost:${process.env.ADMIN_PORT ?? 3011}`,
+        merchant: `http://localhost:${process.env.MERCHANT_PORT ?? 3012}`,
       },
     };
   }
