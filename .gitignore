@@ -36,7 +36,6 @@ playwright/.cache/
 
 # Docs
 /docs/
-/README.md
 AGENTS.md
 
 # Deploy artifacts
