@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import { createHash } from "node:crypto";
 import { loadEnvForCli } from "../src/config/env";
 
 loadEnvForCli();
@@ -9,6 +10,10 @@ import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { AppModule } from "../src/app.module";
 import { PrismaService } from "../src/prisma/prisma.service";
+
+function hashToken(raw: string): string {
+  return createHash("sha256").update(raw).digest("hex");
+}
 
 describe("auth refresh rotation", () => {
   let app: INestApplication;
@@ -87,13 +92,16 @@ describe("auth refresh rotation", () => {
       .send({ refreshToken: secondRefresh })
       .expect(401);
 
-    const active = await prisma.refreshToken.count({
+    const reused = await prisma.refreshToken.findUniqueOrThrow({
+      where: { tokenHash: hashToken(firstRefresh) },
+    });
+    const activeInFamily = await prisma.refreshToken.count({
       where: {
-        user: { email: "merchant@harbor.demo" },
+        familyId: reused.familyId,
         revokedAt: null,
       },
     });
-    expect(active).toBe(0);
+    expect(activeInFamily).toBe(0);
   });
 
   it("logout revokes refresh so subsequent refresh fails", async () => {
