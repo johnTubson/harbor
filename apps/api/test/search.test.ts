@@ -38,7 +38,7 @@ describe("search and storage", () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await app?.close();
   });
 
   it("returns seeded products from public search", async () => {

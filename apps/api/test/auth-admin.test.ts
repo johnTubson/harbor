@@ -46,7 +46,7 @@ describe("auth and admin operations", () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await app?.close();
   });
 
   it("rejects invalid login credentials", async () => {

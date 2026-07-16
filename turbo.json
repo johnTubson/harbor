@@ -1,5 +1,24 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "ADMIN_PORT",
+    "CI",
+    "DATABASE_URL",
+    "DISABLE_WORKERS",
+    "JWT_ACCESS_TTL",
+    "JWT_REFRESH_TTL",
+    "JWT_SECRET",
+    "MERCHANT_PORT",
+    "MINIO_ACCESS_KEY",
+    "MINIO_BUCKET",
+    "MINIO_ENDPOINT",
+    "MINIO_PORT",
+    "MINIO_SECRET_KEY",
+    "NEXT_PUBLIC_API_URL",
+    "NODE_ENV",
+    "PORT",
+    "REDIS_URL"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

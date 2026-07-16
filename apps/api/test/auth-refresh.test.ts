@@ -30,7 +30,7 @@ describe("auth refresh rotation", () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await app?.close();
   });
 
   it("login returns a real refresh token (not the stub)", async () => {

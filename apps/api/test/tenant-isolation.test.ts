@@ -36,7 +36,7 @@ describe("tenant isolation", () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await app?.close();
   });
 
   it("login returns JWT with correct claims", async () => {

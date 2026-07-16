@@ -36,7 +36,7 @@ describe("orders and settlements", () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await app?.close();
   });
 
   it("rejects invalid order state transition", async () => {
