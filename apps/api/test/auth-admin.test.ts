@@ -64,6 +64,7 @@ describe("auth and admin operations", () => {
 
     expect(response.body.user.role).toBe("platform_admin");
     expect(response.body.user.merchantId).toBeNull();
+    expect(response.body.refreshToken).not.toBe("refresh-not-implemented");
   });
 
   it("merchant cannot list all merchants", async () => {

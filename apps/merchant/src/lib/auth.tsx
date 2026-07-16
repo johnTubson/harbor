@@ -5,16 +5,19 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useState,
   useSyncExternalStore,
   type ReactNode,
 } from "react";
 import type { AuthUser } from "@harbor/shared";
 import {
-  clearSession,
   getServerSessionSnapshot,
   getSessionSnapshot,
+  hydrateSession,
   loginRequest,
+  logoutRequest,
   setSession,
   subscribeSession,
 } from "./api";
@@ -29,46 +32,44 @@ type AuthState = {
 
 const AuthContext = createContext<AuthState | null>(null);
 
-function useIsClient() {
-  return useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  );
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const isClient = useIsClient();
+  const [hydrated, setHydrated] = useState(false);
   const session = useSyncExternalStore(
     subscribeSession,
     getSessionSnapshot,
     getServerSessionSnapshot
   );
 
+  useEffect(() => {
+    void hydrateSession().finally(() => setHydrated(true));
+  }, []);
+
   const login = useCallback(async (email: string, password: string) => {
     const res = await loginRequest(email, password);
     if (res.user.role === "platform_admin") {
+      await logoutRequest();
       throw new Error("Use the admin portal for platform accounts");
     }
     if (!res.user.merchantId) {
+      await logoutRequest();
       throw new Error("Merchant account required");
     }
     setSession(res.accessToken, res.user);
   }, []);
 
   const logout = useCallback(() => {
-    clearSession();
+    void logoutRequest();
   }, []);
 
   const value = useMemo(
     () => ({
       user: session.user,
       token: session.token,
-      isLoading: !isClient,
+      isLoading: !hydrated,
       login,
       logout,
     }),
-    [session.user, session.token, isClient, login, logout]
+    [session.user, session.token, hydrated, login, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

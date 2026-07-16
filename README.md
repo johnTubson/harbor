@@ -2,6 +2,10 @@
 
 Multi-tenant marketplace platform — admin KYC portal, merchant catalog & orders, search, settlements.
 
+## Auth
+
+Short-lived JWT access tokens (default 15m) plus opaque refresh tokens stored hashed in Postgres. Refresh rotates on each use; reuse of a rotated token revokes the whole family. Admin and merchant Next apps use BFF routes (`/api/auth/*`) that set **httpOnly** refresh cookies — access tokens stay in memory, not `localStorage`.
+
 ## Stack
 
 Turborepo · NestJS 11 · Next.js 16 · React 19 · Prisma 7 · PostgreSQL · Redis · BullMQ · MinIO · Docker Compose
