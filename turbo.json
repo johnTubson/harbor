@@ -17,7 +17,12 @@
     "NEXT_PUBLIC_API_URL",
     "NODE_ENV",
     "PORT",
-    "REDIS_URL"
+    "REDIS_URL",
+    "STOREFRONT_PORT",
+    "STRIPE_CONNECT_WEBHOOK_SECRET",
+    "STRIPE_MODE",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET"
   ],
   "tasks": {
     "build": {

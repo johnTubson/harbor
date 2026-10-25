@@ -3,11 +3,13 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // rawBody: Stripe webhook signatures are computed over the exact bytes received.
+  const app = await NestFactory.create(AppModule, { rawBody: true });
   app.enableCors({
     origin: [
       `http://localhost:${process.env.ADMIN_PORT ?? 3011}`,
       `http://localhost:${process.env.MERCHANT_PORT ?? 3012}`,
+      `http://localhost:${process.env.STOREFRONT_PORT ?? 3013}`,
     ],
   });
 
@@ -26,6 +28,7 @@ async function bootstrap() {
     .addTag("search")
     .addTag("storage")
     .addTag("orders")
+    .addTag("webhooks")
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

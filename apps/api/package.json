@@ -11,7 +11,8 @@
     "test": "vitest run",
     "db:migrate": "prisma migrate dev && prisma generate",
     "db:seed": "tsx prisma/seed.ts",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "stripe:setup": "tsx src/scripts/stripe-setup.ts"
   },
   "dependencies": {
     "@harbor/shared": "workspace:*",
@@ -26,6 +27,7 @@
     "@prisma/client": "catalog:",
     "bcryptjs": "catalog:",
     "bullmq": "catalog:",
+    "stripe": "catalog:",
     "@aws-sdk/client-s3": "catalog:",
     "@aws-sdk/s3-request-presigner": "catalog:",
     "decimal.js": "catalog:",

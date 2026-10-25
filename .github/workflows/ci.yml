@@ -16,6 +16,7 @@ env:
   MINIO_SECRET_KEY: harborsecret
   MINIO_BUCKET: kyc-documents
   NEXT_PUBLIC_API_URL: http://localhost:4000
+  STRIPE_MODE: fake
 
 jobs:
   quality:

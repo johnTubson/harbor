@@ -13,6 +13,7 @@ export class HealthController {
       apps: {
         admin: `http://localhost:${process.env.ADMIN_PORT ?? 3011}`,
         merchant: `http://localhost:${process.env.MERCHANT_PORT ?? 3012}`,
+        storefront: `http://localhost:${process.env.STOREFRONT_PORT ?? 3013}`,
       },
     };
   }

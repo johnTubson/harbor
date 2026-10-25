@@ -34,8 +34,9 @@ playwright-report/
 blob-report/
 playwright/.cache/
 
-# Docs
-/docs/
+# Docs (private except ADRs, which ship with the repo)
+/docs/*
+!/docs/adr/
 AGENTS.md
 
 # Deploy artifacts
