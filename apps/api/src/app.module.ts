@@ -13,6 +13,8 @@ import { OrdersModule } from "./modules/orders/orders.module";
 import { SearchModule } from "./modules/search/search.module";
 import { SettlementsModule } from "./modules/settlements/settlements.module";
 import { StorageModule } from "./modules/storage/storage.module";
+import { StripeModule } from "./modules/stripe/stripe.module";
+import { WebhooksModule } from "./modules/webhooks/webhooks.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { WorkersModule } from "./workers/workers.module";
 
@@ -35,6 +37,8 @@ import { WorkersModule } from "./workers/workers.module";
     StorageModule,
     SearchModule,
     WorkersModule,
+    StripeModule,
+    WebhooksModule,
   ],
   controllers: [AppController, HealthController],
 })

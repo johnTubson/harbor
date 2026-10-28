@@ -162,6 +162,9 @@ catalogs:
     sonner:
       specifier: ^2.0.3
       version: 2.0.7
+    stripe:
+      specifier: ^23.0.1
+      version: 23.0.1
     supertest:
       specifier: ^7.1.4
       version: 7.2.2
@@ -321,6 +324,9 @@ importers:
       rxjs:
         specifier: 'catalog:'
         version: 7.8.2
+      stripe:
+        specifier: 'catalog:'
+        version: 23.0.1(@types/node@26.0.1)
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -385,6 +391,46 @@ importers:
       lucide-react:
         specifier: 'catalog:'
         version: 0.511.0(react@19.2.7)
+      next:
+        specifier: 'catalog:'
+        version: 16.2.9(@playwright/test@1.61.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.7
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.7(react@19.2.7)
+    devDependencies:
+      '@tailwindcss/postcss':
+        specifier: 'catalog:'
+        version: 4.3.2
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.0.1
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.17)
+      postcss:
+        specifier: 'catalog:'
+        version: 8.5.16
+      tailwindcss:
+        specifier: 'catalog:'
+        version: 4.3.2
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  apps/storefront:
+    dependencies:
+      '@harbor/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@harbor/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       next:
         specifier: 'catalog:'
         version: 16.2.9(@playwright/test@1.61.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -4742,6 +4788,15 @@ packages:
   strip-bom@3.0.0:
     resolution: {integrity: sha512-vavAMRXOgBVNF6nyEEmL3DBK19iRpDcoIwW+swQ+CbGiu7lju6t+JklA1MHweoWtadgt4ISVUsXLyDq34ddcwA==}
     engines: {node: '>=4'}
+
+  stripe@23.0.1:
+    resolution: {integrity: sha512-VFLs9IAzSZ8GIm6/vqhjqOL0fbYrSNYCpgZ3LS3YkSi/i5RnyMpu/Hf9YxPTOCYwc3mZKU3IJvuvKffQH2NLMg==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@types/node': '>=20'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
 
   strtok3@10.3.5:
     resolution: {integrity: sha512-ki4hZQfh5rX0QDLLkOCj+h+CVNkqmp/CMf8v8kZpkNVK6jGQooMytqzLZYUVYIZcFZ6yDB70EfD8POcFXiF5oA==}
@@ -9382,6 +9437,10 @@ snapshots:
       ansi-regex: 6.2.2
 
   strip-bom@3.0.0: {}
+
+  stripe@23.0.1(@types/node@26.0.1):
+    optionalDependencies:
+      '@types/node': 26.0.1
 
   strtok3@10.3.5:
     dependencies:

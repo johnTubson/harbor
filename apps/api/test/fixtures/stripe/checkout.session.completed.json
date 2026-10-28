@@ -1,0 +1,27 @@
+{
+  "id": "evt_fixture_checkout_completed",
+  "object": "event",
+  "api_version": "2026-09-30.endive",
+  "created": 1761350400,
+  "livemode": false,
+  "type": "checkout.session.completed",
+  "pending_webhooks": 1,
+  "request": { "id": null, "idempotency_key": null },
+  "data": {
+    "object": {
+      "id": "cs_test_fixture",
+      "object": "checkout.session",
+      "mode": "payment",
+      "payment_status": "paid",
+      "status": "complete",
+      "amount_subtotal": 5000,
+      "amount_total": 5000,
+      "currency": "usd",
+      "payment_intent": "pi_test_fixture",
+      "metadata": {
+        "orderId": "00000000-0000-0000-0000-000000000001",
+        "paymentId": "00000000-0000-0000-0000-000000000002"
+      }
+    }
+  }
+}

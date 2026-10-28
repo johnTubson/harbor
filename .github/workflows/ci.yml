@@ -16,6 +16,7 @@ env:
   MINIO_SECRET_KEY: harborsecret
   MINIO_BUCKET: kyc-documents
   NEXT_PUBLIC_API_URL: http://localhost:4000
+  STRIPE_MODE: fake
 
 jobs:
   quality:
@@ -95,17 +96,8 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
-      - name: Start MinIO
-        run: |
-          docker run -d --name minio \
-            -p 9000:9000 \
-            -e MINIO_ROOT_USER=harbor \
-            -e MINIO_ROOT_PASSWORD=harborsecret \
-            minio/minio server /data
-          for i in $(seq 1 30); do
-            curl -sf http://localhost:9000/minio/health/live && break
-            sleep 2
-          done
+      # No MinIO here: the e2e specs never touch storage and StorageService only
+      # warns when the bucket is unreachable. minio/minio is no longer pullable.
       - run: pnpm deps:ci
       - run: pnpm db:migrate
       - run: pnpm build

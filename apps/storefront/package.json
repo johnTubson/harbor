@@ -1,0 +1,29 @@
+{
+  "name": "@harbor/storefront",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3013",
+    "build": "next build",
+    "start": "next start -p 3013",
+    "lint": "echo 'lint storefront'",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "echo 'storefront e2e in S5'"
+  },
+  "dependencies": {
+    "@harbor/shared": "workspace:*",
+    "@harbor/ui": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "postcss": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  }
+}
